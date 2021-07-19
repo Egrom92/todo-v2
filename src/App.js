@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useState, useEffect} from 'react'
 
-import Form from './components/Form';
+import Form from './components/Form/Form';
 import TodoList from './components/TodoList'
 
 if (typeof window !== 'undefined') {
