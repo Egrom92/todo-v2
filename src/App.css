@@ -61,7 +61,7 @@ form button:hover {
 .filter-todo {
     padding: 1rem;
 }
-.todo li {
+.todo-item {
     flex: 1;
 }
 
