@@ -1,24 +1,18 @@
 import React from 'react'
 
-export default function Todo({toDo, toDos, setToDos}) {
+export default function Todo({onDelete, onDoneToggle, toDo}) {
 
     const deleteHandler = () => {
-        setToDos(toDos.filter((el)=> el.id !== toDo.id))
+        onDelete(toDo)
     }
-    const completedHAndler = () => {
-        setToDos(toDos.map(el=> {
-           if (el.id === toDo.id) {
-               return {...el, completed: !el.completed}
-           }
-           return el;
-        }))
-
+    const doneToggleHandler = () => {
+        onDoneToggle(toDo)
     }
 
     return (
         <li className='todo'>
             <div className={`todo-item ${toDo.completed ? 'completed' : ''}`}>{toDo.text}</div>
-                <button onClick={completedHAndler} className="complete-btn">
+                <button onClick={doneToggleHandler} className="complete-btn">
                     <i className="fas fa-check"></i>
                 </button>
                 <button onClick={deleteHandler} className="trash-btn">
