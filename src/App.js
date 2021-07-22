@@ -1,69 +1,44 @@
-import './App.css';
-import React, {useState, useEffect} from 'react'
+import "./App.css";
+import { useState, useMemo } from "react";
 
-import Form from './components/Form/Form';
-import TodoList from './components/TodoList'
-
+import Form from "./components/Form";
+import TodoList from "./components/TodoList";
+import Filter from "./components/Filter";
+import useTodos from "./hooks/useTodos";
 
 function App() {
+  const [status, setStatus] = useState("All");
+  const [toDos, addTodo, doneToggle, remove, edit] = useTodos();
 
-    const [inputText, setInputText] = useState('');
-    const [toDos, setToDos] = useState([]);
-    const [status, setStatus] = useState('All');
-    const [filterTodos, setFilterTodos] = useState([]);
-
-    useEffect(() => {filterHandler()}, [toDos, status])
-
-
-    const onInputText = content => (
-        setInputText(content)
-    )
-    const onAddPoint = () => {
-        setToDos([
-            ...toDos,
-            {text: inputText, completed: false, id: Math.round(Math.random() * 1000)}
-        ])
-        setInputText('')
-    }
-    const onDoneToggle = (point) => {
-        setToDos(toDos.map(el=> {
-            if (el.id === point.id) {
-                return {...el, completed: !el.completed}
-            }
-            return el;
-        }))
-    }
-    const onDelete = (point) => {
-        setToDos(toDos.filter((el)=> el.id !== point.id))
-    }
-    const onStatusChange = stat => {
-        setStatus(stat)
+  const filteredTodos = useMemo(() => {
+    if (status === "completed") {
+      return toDos.filter((todo) => todo.completed);
     }
 
+    if (status === "uncompleted") {
+      return toDos.filter((todo) => !todo.completed);
+    }
 
-    const filterHandler = () => {
-        switch (status) {
-            case 'completed':
-                setFilterTodos(toDos.filter(todo => todo.completed))
-                break;
-            case 'uncompleted':
-                setFilterTodos(toDos.filter(todo => !todo.completed))
-                break;
-            default:
-                setFilterTodos(toDos)
-                break;
-        }
-    };
-
+    return toDos;
+  }, [status, toDos]);
 
   return (
     <div className="App">
-        <header>
-            <h1>Best ToDo</h1>
-        </header>
-        <Form onInputText={onInputText} onAddPoint={onAddPoint} onStatusChange={onStatusChange} status={status} setStatus={setStatus} inputText={inputText} toDos={toDos} setToDos={setToDos} setInputText={setInputText}/>
-        <TodoList onDoneToggle={onDoneToggle} onDelete={onDelete} toDos={toDos} setToDos={setToDos} filterTodos={filterTodos}/>
-        
+      <header>
+        <h1>Best ToDo</h1>
+      </header>
+
+      <Form onValue={addTodo}>
+        <Filter onStatusChange={setStatus} status={status} />
+      </Form>
+
+      <TodoList
+        onDoneToggle={doneToggle}
+        onDelete={remove}
+        onEdit={edit}
+        toDos={toDos}
+        filteredTodos={filteredTodos}
+      />
     </div>
   );
 }
