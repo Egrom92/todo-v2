@@ -2,6 +2,7 @@ import React from "react";
 
 export default function Filter(props) {
   const { onStatusChange, status } = props;
+  const test = 'test';
 
   return (
     <div className="select">
@@ -9,6 +10,7 @@ export default function Filter(props) {
         onChange={(e) => onStatusChange(e.target.value)}
         name="todos"
         value={status}
+        test={test}
         className="filter-todo"
       >
         <option value="all">All</option>
